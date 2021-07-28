@@ -2,6 +2,7 @@ package com.androiderik
 
 import com.androiderik.data.collections.User
 import com.androiderik.data.registerUser
+import com.androiderik.routes.registerRoute
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.gson.*
@@ -21,19 +22,14 @@ fun Application.module(testing: Boolean = false) {
     install(DefaultHeaders)
     //log http requests
     install(CallLogging)
-    install(Routing)
+    //for define url endpoints
+    install(Routing) {
+        registerRoute()
+    }
     install(ContentNegotiation) {
         gson {
             setPrettyPrinting()
         }
-    }
-    CoroutineScope(Dispatchers.IO).launch {
-        registerUser(
-            User(
-                "test@gmail.com",
-                "123456"
-            )
-        )
     }
 
 }
