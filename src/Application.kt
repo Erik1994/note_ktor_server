@@ -2,6 +2,7 @@ package com.androiderik
 
 import com.androiderik.data.collections.User
 import com.androiderik.data.registerUser
+import com.androiderik.routes.loginRoute
 import com.androiderik.routes.registerRoute
 import io.ktor.application.*
 import io.ktor.features.*
@@ -25,6 +26,7 @@ fun Application.module(testing: Boolean = false) {
     //for define url endpoints
     install(Routing) {
         registerRoute()
+        loginRoute()
     }
     install(ContentNegotiation) {
         gson {
