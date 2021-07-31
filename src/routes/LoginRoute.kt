@@ -4,7 +4,6 @@ import com.androiderik.data.checkPasswordForEmail
 import com.androiderik.data.requests.AccountRequest
 import com.androiderik.data.responses.SimpleResponse
 import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.features.ContentTransformationException
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK

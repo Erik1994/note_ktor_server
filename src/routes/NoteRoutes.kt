@@ -1,7 +1,9 @@
 package com.androiderik.routes
 
 import com.androiderik.data.collections.Note
+import com.androiderik.data.deleteNoteForUser
 import com.androiderik.data.getNotesForUser
+import com.androiderik.data.requests.DeleteNoteRequest
 import com.androiderik.data.saveNote
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -32,7 +34,26 @@ fun Route.noteRoutes() {
                     call.respond(BadRequest)
                     return@post
                 }
-                if(saveNote(note)) {
+                if (saveNote(note)) {
+                    call.respond(OK)
+                } else {
+                    call.respond(Conflict)
+                }
+            }
+        }
+    }
+
+    route("/deleteNote") {
+        authenticate {
+            post {
+                val email = call.principal<UserIdPrincipal>()!!.name
+                val request = try {
+                    call.receive<DeleteNoteRequest>()
+                } catch (e: ContentTransformationException) {
+                    call.respond(BadRequest)
+                    return@post
+                }
+                if (deleteNoteForUser(email, request.id)) {
                     call.respond(OK)
                 } else {
                     call.respond(Conflict)
