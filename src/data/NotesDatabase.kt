@@ -36,7 +36,6 @@ suspend fun saveNote(note: Note): Boolean {
         notes.updateOneById(note.id, note).wasAcknowledged()
     } else {
         notes.insertOne(note).wasAcknowledged()
-        notes.insertOne(note).wasAcknowledged()
     }
 }
 
