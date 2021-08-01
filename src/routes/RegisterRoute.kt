@@ -5,6 +5,7 @@ import com.androiderik.data.collections.User
 import com.androiderik.data.registerUser
 import com.androiderik.data.requests.AccountRequest
 import com.androiderik.data.responses.SimpleResponse
+import com.androiderik.security.getHashWithSalt
 import io.ktor.application.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.OK
@@ -23,7 +24,7 @@ fun Route.registerRoute() {
             }
             val userExists = checkIfUserExists(request.email)
             if(!userExists) {
-                if(registerUser(User(request.email, request.password))) {
+                if(registerUser(User(request.email, getHashWithSalt(request.password)))) {
                     call.respond(SimpleResponse(true, "Successfully created account!"))
                 } else {
                     call.respond(SimpleResponse(false, "An unknown error occurred"))

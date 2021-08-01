@@ -2,6 +2,7 @@ package com.androiderik.data
 
 import com.androiderik.data.collections.Note
 import com.androiderik.data.collections.User
+import com.androiderik.security.checkHasForPassword
 import org.litote.kmongo.contains
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.coroutine.insertOne
@@ -23,7 +24,7 @@ suspend fun checkIfUserExists(email: String): Boolean = users.findOne(User::emai
 
 suspend fun checkPasswordForEmail(email: String, passwordToCheck: String): Boolean {
     val actualPassword = users.findOne(User::email eq email)?.password ?: return false
-    return actualPassword == passwordToCheck
+    return checkHasForPassword(passwordToCheck, actualPassword)
 }
 
 suspend fun getNotesForUser(email: String): List<Note> {
