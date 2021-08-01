@@ -7,6 +7,7 @@ import com.androiderik.data.requests.DeleteNoteRequest
 import com.androiderik.data.responses.SimpleResponse
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Conflict
 import io.ktor.http.HttpStatusCode.Companion.OK
@@ -17,9 +18,10 @@ import kotlinx.css.tr
 
 fun Route.noteRoutes() {
     route("/getNotes") {
-        authenticate {
+        authenticate("auth-jwt") {
             get {
-                val email = call.principal<UserIdPrincipal>()!!.name
+                //val email = call.principal<UserIdPrincipal>()!!.name
+                val email = call.principal<JWTPrincipal>()!!.payload.getClaim("username").asString()
                 val notes = getNotesForUser(email)
                 call.respond(OK, notes)
             }
@@ -27,7 +29,7 @@ fun Route.noteRoutes() {
     }
 
     route("/addNote") {
-        authenticate {
+        authenticate("auth-jwt") {
             post {
                 val note = try {
                     call.receive<Note>()
@@ -45,9 +47,10 @@ fun Route.noteRoutes() {
     }
 
     route("/deleteNote") {
-        authenticate {
+        authenticate("auth-jwt") {
             post {
-                val email = call.principal<UserIdPrincipal>()!!.name
+                //val email = call.principal<UserIdPrincipal>()!!.name
+                val email = call.principal<JWTPrincipal>()!!.payload.getClaim("username").asString()
                 val request = try {
                     call.receive<DeleteNoteRequest>()
                 } catch (e: ContentTransformationException) {
@@ -64,7 +67,7 @@ fun Route.noteRoutes() {
     }
 
     route("/addOwnerToNote") {
-        authenticate {
+        authenticate("auth-jwt") {
             post {
                 val request = try {
                     call.receive<AddOwnerRequest>()
