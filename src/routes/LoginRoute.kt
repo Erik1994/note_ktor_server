@@ -37,9 +37,9 @@ fun Route.loginRoute(
                     secret,
                     request
                 )
-                call.respond(OK, TokenResponse(token))
+                call.respond(OK, TokenResponse(token, true))
             } else {
-                call.respond(OK, SimpleResponse(false, "The E-Mail or password is incorrect"))
+                call.respond(OK, TokenResponse("",false, "The E-Mail or password is incorrect"))
             }
         }
     }

@@ -42,14 +42,14 @@ suspend fun saveNote(note: Note): Boolean {
 
 suspend fun deleteNoteForUser(email: String, noteId: String): Boolean {
     val note = notes.findOne(Note::id eq noteId, Note::owners contains email)
-    note?.let { note ->
-        if (note.owners.size > 1) {
+    note?.let {
+        if (it.owners.size > 1) {
             // the note has multiple owners, so we just delete the email from list
-            val newOwners = note.owners - email
+            val newOwners = it.owners - email
             val updateResult = notes.updateOne(Note::id eq noteId, setValue(Note::owners, newOwners))
             return updateResult.wasAcknowledged()
         }
-        return notes.deleteOneById(note.id).wasAcknowledged()
+        return notes.deleteOneById(it.id).wasAcknowledged()
     } ?: return false
 }
 
